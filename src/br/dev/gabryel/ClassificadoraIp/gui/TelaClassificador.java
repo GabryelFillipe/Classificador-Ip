@@ -82,10 +82,41 @@ public class TelaClassificador {
 		buttonClassificarIp = new JButton();
 		buttonClassificarIp.setText("Classificar");
 		buttonClassificarIp.setBounds(20, 120, 185, 30);
+		
+		buttonClassificarIp.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 
 		buttonLimpar = new JButton();
 		buttonLimpar.setText("Limpar");
 		buttonLimpar.setBounds(215, 120, 185, 30);
+		
+		
+		
+		labelIpClass = new JLabel();
+		labelIpClass.setBounds(20, 170, 100, 50);
+		labelIpClass.setText("Teste");
+		
+		
+		labelMascaraDecimal = new JLabel();
+		labelMascaraDecimal.setBounds(20, 190, 100, 50);
+		labelMascaraDecimal.setText("Teste");
+		
+		labelMascaraBinaria = new JLabel();
+		labelMascaraBinaria.setBounds(20, 210, 100, 50);
+		labelMascaraBinaria.setText("Teste");
+		
+		labelIpsDisponiveis = new JLabel();
+		labelIpsDisponiveis.setBounds(20, 230, 100, 50);
+		labelIpsDisponiveis.setText("Teste");
+		
+		labelMensagemErro = new JLabel();
+		labelMensagemErro.setBounds(20, 250, 100, 50);
+		labelMensagemErro.setText("Teste");
 
 		container.add(labelIp);
 		container.add(labelCidr);
@@ -97,6 +128,11 @@ public class TelaClassificador {
 		container.add(textCidr);
 		container.add(buttonClassificarIp);
 		container.add(buttonLimpar);
+		container.add(labelIpClass);
+		container.add(labelMascaraDecimal);
+		container.add(labelMascaraBinaria);
+		container.add(labelIpsDisponiveis);
+		container.add(labelMensagemErro);
 
 		tela.setVisible(true);
 	}
