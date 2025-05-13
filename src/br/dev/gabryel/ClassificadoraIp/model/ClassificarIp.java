@@ -109,25 +109,40 @@ public class ClassificarIp {
 		return ipsPorSubRede;
 	}
 
-	public StringBuilder gerarMascaraBinaria(int cidr) {
+	public StringBuilder gerarMascaraBinaria(int  cidr) {
 		StringBuilder mascaraBinaria = new StringBuilder();
 		for (int i = 0; i < 32; i++) {
 			mascaraBinaria.append(i < cidr ? '1' : '0');
-		}
+			  if (i < 8)
+		            mascaraBinaria.append(".");
+		}   
+		// ? serve como uma expressão condicional ternária para o if-else.
 		return mascaraBinaria;
 
 	}
 
 	public String gerarMascaraDecimal(StringBuilder binaria) {
-		StringBuilder decimal = new StringBuilder();
-		for (int i = 0; i < 4; i++) {
-			String octeto = binaria.substring(i * 8, (i + 1) * 8);
-			decimal.append(Integer.parseInt(octeto, 2));
-			if (i < 3)
-				decimal.append(".");
-		}
-		return decimal.toString();
+	    // Cria um novo StringBuilder para armazenar o resultado decimal da máscara
+	    StringBuilder decimal = new StringBuilder();
+
+	    // Loop que percorre os 4 octetos (32 bits / 8 bits por octeto = 4)
+	    for (int i = 0; i < 4; i++) {
+	        // Extrai 8 bits (1 octeto) da string binária, com base na posição atual
+	        String octeto = binaria.substring(i * 8, (i + 1) * 8);
+
+	        // Converte o octeto binário para decimal e adiciona ao resultado
+	        decimal.append(Integer.parseInt(octeto, 2));
+
+	        // Se não for o último octeto, adiciona um ponto como separador
+	        if (i < 3)
+	            decimal.append(".");
+	    }
+
+	    // Converte o StringBuilder final em uma String e retorna a máscara no formato decimal
+	    return decimal.toString();
 	}
+
+	
 	public void calcularIpsPorSubRede() {
 		
 		}

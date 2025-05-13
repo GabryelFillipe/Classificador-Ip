@@ -34,7 +34,7 @@ public class TelaClassificador {
 		// Criando a minha tela.
 		JFrame tela = new JFrame();
 		tela.setTitle("Classificador de IP");
-		tela.setSize(430, 600);
+		tela.setSize(450, 620);
 		tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		tela.setResizable(false);
 		tela.setLayout(null);
@@ -84,39 +84,101 @@ public class TelaClassificador {
 		buttonClassificarIp.setBounds(20, 120, 185, 30);
 		
 		buttonClassificarIp.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				try {
+					labelMensagemErro.setVisible(false);
+
+					// Pega os valores digitados
+					String primeiro = textPrimeiroOcteto.getText();
+					String segundo = textSegundoOcteto.getText();
+					String terceiro = textTerceiroOcteto.getText();
+					String quarto = textQuartoOcteto.getText();
+					int cidr = Integer.parseInt(textCidr.getText());
+
+					// Cria objeto e configura
+					ClassificarIp classificar = new ClassificarIp();
+					classificar.setPrimeiroOcteto(primeiro);
+					classificar.setSegundoOcteto(segundo);
+					classificar.setTerceiroOcteto(terceiro);
+					classificar.setQuartoOcteto(quarto);
+					classificar.setCidr(cidr);
+
+					// Gera dados
+					String classe = classificar.getClasse();
+					String mascaraBinaria = classificar.gerarMascaraBinaria(cidr).toString();
+					String mascaraDecimal = classificar.gerarMascaraDecimal(new StringBuilder(mascaraBinaria));
+					int ips = (int) classificar.getIpPorSubRede();
+
+					// Atualiza a tela
+					labelIpClass.setText("Classe do IP: " + classe);
+					labelMascaraBinaria.setText("Máscara Binária: " + mascaraBinaria);
+					labelMascaraDecimal.setText("Máscara Decimal: " + mascaraDecimal);
+					labelIpsDisponiveis.setText("IPs disponíveis: " + ips);
+
+					labelIpClass.setVisible(true);
+					labelMascaraBinaria.setVisible(true);
+					labelMascaraDecimal.setVisible(true);
+					labelIpsDisponiveis.setVisible(true);
+
+				} catch (Exception ex) {
+					labelIpClass.setVisible(false);
+					labelMascaraBinaria.setVisible(false);
+					labelMascaraDecimal.setVisible(false);
+					labelIpsDisponiveis.setVisible(false);
+
+					labelMensagemErro.setBounds(50, 160, 370, 90);
+					labelMensagemErro.setText("<html><body style='width: 250px'>Erro ao processar. Verifique se todos os campos foram preenchidos corretamente com números válidos.");
+					labelMensagemErro.setVisible(true);
+					textCidr.setText(null);
+					textPrimeiroOcteto.setText(null);
+					textQuartoOcteto.setText(null);
+					textSegundoOcteto.setText(null);
+					textTerceiroOcteto.setText(null);
+				}
 			}
 		});
+
 
 		buttonLimpar = new JButton();
 		buttonLimpar.setText("Limpar");
 		buttonLimpar.setBounds(215, 120, 185, 30);
 		
 		
+		buttonLimpar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				labelIpClass.setVisible(false);
+				labelMascaraBinaria.setVisible(false);
+				labelMascaraDecimal.setVisible(false);
+				labelIpsDisponiveis.setVisible(false);
+				
+			}
+		});
+		
 		
 		labelIpClass = new JLabel();
 		labelIpClass.setBounds(20, 170, 100, 50);
-		labelIpClass.setText("Teste");
+		
+		
+
 		
 		
 		labelMascaraDecimal = new JLabel();
-		labelMascaraDecimal.setBounds(20, 190, 100, 50);
-		labelMascaraDecimal.setText("Teste");
+		labelMascaraDecimal.setBounds(20, 190, 350, 50);
 		
 		labelMascaraBinaria = new JLabel();
-		labelMascaraBinaria.setBounds(20, 210, 100, 50);
-		labelMascaraBinaria.setText("Teste");
+		labelMascaraBinaria.setBounds(20, 210, 350, 50);
+		
 		
 		labelIpsDisponiveis = new JLabel();
-		labelIpsDisponiveis.setBounds(20, 230, 100, 50);
-		labelIpsDisponiveis.setText("Teste");
+		labelIpsDisponiveis.setBounds(20, 230, 350, 50);
+		
 		
 		labelMensagemErro = new JLabel();
-		labelMensagemErro.setBounds(20, 250, 100, 50);
-		labelMensagemErro.setText("Teste");
+		//labelMensagemErro.setBounds(20, 250, 100, 50);
+		
 
 		container.add(labelIp);
 		container.add(labelCidr);
