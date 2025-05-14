@@ -1,5 +1,6 @@
 package br.dev.gabryel.ClassificadoraIp.gui;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -34,7 +35,7 @@ public class TelaClassificador {
 		// Criando a minha tela.
 		JFrame tela = new JFrame();
 		tela.setTitle("Classificador de IP");
-		tela.setSize(450, 620);
+		tela.setSize(450, 450);
 		tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		tela.setResizable(false);
 		tela.setLayout(null);
@@ -42,8 +43,9 @@ public class TelaClassificador {
 		// Obtendo a referecia do painel de conteudo da tela.
 		Container container = tela.getContentPane();
 
-		Font fonteResultado = new Font("Bold", Font.BOLD, 12);
+		Font fonteResultado = new Font("Bold", Font.BOLD, 14);
 		Font fonteLabel = new Font("Bold", Font.BOLD, 16);
+		Font fonteErro = new Font("Bold", Font.BOLD, 18);
 
 		// Adicionando o LabelIp
 		labelIp = new JLabel();
@@ -89,7 +91,7 @@ public class TelaClassificador {
 				try {
 					labelMensagemErro.setVisible(false);
 
-					// Pega os valores digitados
+					// Pega os valores digitados pelo usuario
 					String primeiro = textPrimeiroOcteto.getText();
 					String segundo = textSegundoOcteto.getText();
 					String terceiro = textTerceiroOcteto.getText();
@@ -153,30 +155,38 @@ public class TelaClassificador {
 				labelMascaraBinaria.setVisible(false);
 				labelMascaraDecimal.setVisible(false);
 				labelIpsDisponiveis.setVisible(false);
+				textPrimeiroOcteto.setText(null);
+				textQuartoOcteto.setText(null);
+				textSegundoOcteto.setText(null);
+				textTerceiroOcteto.setText(null);
+				textCidr.setText(null);
 				
 			}
 		});
 		
 		
 		labelIpClass = new JLabel();
-		labelIpClass.setBounds(20, 170, 100, 50);
-		
+		labelIpClass.setBounds(20, 170, 200, 50);
+		labelIpClass.setFont(fonteResultado);
 		
 
 		
 		
 		labelMascaraDecimal = new JLabel();
 		labelMascaraDecimal.setBounds(20, 190, 350, 50);
+		labelMascaraDecimal.setFont(fonteResultado);
 		
 		labelMascaraBinaria = new JLabel();
-		labelMascaraBinaria.setBounds(20, 210, 350, 50);
-		
+		labelMascaraBinaria.setBounds(20, 210, 430, 50);
+		labelMascaraBinaria.setFont(fonteResultado);
 		
 		labelIpsDisponiveis = new JLabel();
 		labelIpsDisponiveis.setBounds(20, 230, 350, 50);
-		
+		labelIpsDisponiveis.setFont(fonteResultado);
 		
 		labelMensagemErro = new JLabel();
+		labelMensagemErro.setForeground(Color.red);
+		labelMensagemErro.setFont(fonteErro);
 		//labelMensagemErro.setBounds(20, 250, 100, 50);
 		
 

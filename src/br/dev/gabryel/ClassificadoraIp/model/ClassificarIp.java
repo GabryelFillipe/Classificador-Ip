@@ -54,15 +54,17 @@ public class ClassificarIp {
 	}
 	public String getClasse() {
 		
-		int primeiroOctetoDouble = getPrimeiroOcteto();
-		if (primeiroOctetoDouble >= 1 && primeiroOctetoDouble <= 126)
+		int primeiroOctetoInt = getPrimeiroOcteto();
+		 if (primeiroOctetoInt >= 1 && primeiroOctetoInt <= 126)
 			classe = "A";
-		else if (primeiroOctetoDouble >= 128 && primeiroOctetoDouble <= 191)
+		else if (primeiroOctetoInt >= 128 && primeiroOctetoInt <= 191)
 			classe = "B";
-		else if (primeiroOctetoDouble >= 192 && primeiroOctetoDouble <= 223)
+		else if (primeiroOctetoInt >= 192 && primeiroOctetoInt <= 223)
 			classe = "C";
-		else if (primeiroOctetoDouble >= 224 && primeiroOctetoDouble <= 239)
+		else if (primeiroOctetoInt >= 224 && primeiroOctetoInt <= 239)
 			classe = "D";
+		else if (primeiroOctetoInt < 1)
+			throw new IllegalArgumentException("O endereço IP não pode começar com um numero menor que 1.");// Define que o primeiro octeto não pode ser menor que 1
 		else
 			classe = "E";
 
@@ -113,8 +115,8 @@ public class ClassificarIp {
 		StringBuilder mascaraBinaria = new StringBuilder();
 		for (int i = 0; i < 32; i++) {
 			mascaraBinaria.append(i < cidr ? '1' : '0');
-			  if (i < 8)
-		            mascaraBinaria.append(".");
+//			  if (i < 8)
+//		            mascaraBinaria.append(".");
 		}   
 		// ? serve como uma expressão condicional ternária para o if-else.
 		return mascaraBinaria;
