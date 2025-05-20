@@ -1,5 +1,7 @@
 package br.dev.gabryel.ClassificadoraIp.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ClassificarIp {
@@ -21,10 +23,10 @@ public class ClassificarIp {
 	public void setCidr(int cidr) {
 		if (cidr < 0 || cidr > 32) {
 			throw new IllegalArgumentException("CIDR inválido: deve estar entre 0 e 32.");// Limita o CIDR a 32
+			// Thorw é usado para criar uma execução de erro
 		}
 		this.cidr = cidr;
 	}
-
 
 	public String getMascaraDecimal() {
 		return mascaraDecimal;
@@ -42,20 +44,20 @@ public class ClassificarIp {
 		this.mascaraBinaria = mascaraBinaria;
 	}
 
-	
-
 	public int getPrimeiroOcteto() {
 		int primeiroOctetoInt = Integer.parseInt(primeiroOcteto);
+
 		return primeiroOctetoInt;
 	}
 
 	public void setPrimeiroOcteto(String primeiroOcteto) {
 		this.primeiroOcteto = primeiroOcteto;
 	}
+
 	public String getClasse() {
-		
+
 		int primeiroOctetoInt = getPrimeiroOcteto();
-		 if (primeiroOctetoInt >= 1 && primeiroOctetoInt <= 126)
+		if (primeiroOctetoInt >= 1 && primeiroOctetoInt <= 126)
 			classe = "A";
 		else if (primeiroOctetoInt >= 128 && primeiroOctetoInt <= 191)
 			classe = "B";
@@ -63,15 +65,14 @@ public class ClassificarIp {
 			classe = "C";
 		else if (primeiroOctetoInt >= 224 && primeiroOctetoInt <= 239)
 			classe = "D";
-		else if (primeiroOctetoInt < 1)
-			throw new IllegalArgumentException("O endereço IP não pode começar com um numero menor que 1.");// Define que o primeiro octeto não pode ser menor que 1
-		else
+		else if (primeiroOctetoInt >= 240 && primeiroOctetoInt <= 255)
 			classe = "E";
-
+		else if (primeiroOctetoInt < 1 && primeiroOctetoInt > 255)
+			throw new IllegalArgumentException("O endereço IP não pode começar com um numero menor que 1.");// Define que o primeiro octeto não pode ser menor que 1
+																											
 		return classe;
 	}
 
-	
 	public int getSegundoOcteto() {
 		int segundoOctetoInt = Integer.parseInt(segundoOcteto);
 		return segundoOctetoInt;
@@ -98,75 +99,86 @@ public class ClassificarIp {
 	public void setQuartoOcteto(String quartoOcteto) {
 		this.quartoOcteto = quartoOcteto;
 	}
+
 	public double getIpPorSubRede() {
 		if (cidr > 32) {
 			System.out.println("O CIDR NÃO PODE SER MAIOR QUE 32");
-		}else if (cidr < 30) {
+		} else if (cidr < 30) {
 			ipsPorSubRede = Math.pow(2, 32 - cidr) - 2;
 		} else {
 			ipsPorSubRede = Math.pow(2, 32 - cidr); // Para CIDR 30 ou mais, pode ajustar a lógica
 		}
-		
-		
+
 		return ipsPorSubRede;
 	}
 
-	public StringBuilder gerarMascaraBinaria(int  cidr) {
+	public StringBuilder gerarMascaraBinaria(int cidr) {
 		StringBuilder mascaraBinaria = new StringBuilder();
 		for (int i = 0; i < 32; i++) {
 			mascaraBinaria.append(i < cidr ? '1' : '0');
 //			  if (i < 8)
 //		            mascaraBinaria.append(".");
-		}   
+		}
 		// ? serve como uma expressão condicional ternária para o if-else.
 		return mascaraBinaria;
 
 	}
 
 	public String gerarMascaraDecimal(StringBuilder binaria) {
-	    // Cria um novo StringBuilder para armazenar o resultado decimal da máscara
-	    StringBuilder decimal = new StringBuilder();
+		// Cria um novo StringBuilder para armazenar o resultado decimal da máscara
+		StringBuilder decimal = new StringBuilder();
 
-	    // Loop que percorre os 4 octetos (32 bits / 8 bits por octeto = 4)
-	    for (int i = 0; i < 4; i++) {
-	        // Extrai 8 bits (1 octeto) da string binária, com base na posição atual
-	        String octeto = binaria.substring(i * 8, (i + 1) * 8);
+		// Loop que percorre os 4 octetos (32 bits / 8 bits por octeto = 4)
+		for (int i = 0; i < 4; i++) {
+			// Extrai 8 bits (1 octeto) da string binária, com base na posição atual
+			String octeto = binaria.substring(i * 8, (i + 1) * 8);
 
-	        // Converte o octeto binário para decimal e adiciona ao resultado
-	        decimal.append(Integer.parseInt(octeto, 2));
+			// Converte o octeto binário para decimal e adiciona ao resultado
+			decimal.append(Integer.parseInt(octeto, 2));
 
-	        // Se não for o último octeto, adiciona um ponto como separador
-	        if (i < 3)
-	            decimal.append(".");
-	    }
+			// Se não for o último octeto, adiciona um ponto como separador
+			if (i < 3)
+				decimal.append(".");
+		}
 
-	    // Converte o StringBuilder final em uma String e retorna a máscara no formato decimal
-	    return decimal.toString();
+		// Converte o StringBuilder final em uma String e retorna a máscara no formato
+		// decimal
+		return decimal.toString();
 	}
 
-	
-	public void calcularIpsPorSubRede() {
-		
-		}
-		
-	
+	public List<String> calcularSubRedes() {
+	    List<String> sugestoes = new ArrayList<>();
+
+	    if (cidr < 30) {
+	        for (int newCIDR = cidr + 1; newCIDR <= cidr + 4 && newCIDR <= 30; newCIDR++) {
+	            int subHosts = (int) Math.pow(2, 32 - newCIDR) - 2;
+	            sugestoes.add("CIDR /" + newCIDR + " -> " + subHosts + " IPs utilizáveis");
+	        }
+	    } else {
+	        sugestoes.add("Não é possível subdividir mais o IP com CIDR /" + cidr);
+	    }
+
+	    return sugestoes;
+	}
+
+
 	public void mostrarDados() {
-		
+
 		mascaraBinaria = gerarMascaraBinaria(cidr).toString();
 		mascaraDecimal = gerarMascaraDecimal(new StringBuilder(mascaraBinaria));
 		classe = getClasse();
 		double ipsDisponiveis = getIpPorSubRede(); // força o cálculo dos IPs por sub rede
 
 		System.out.println("------------------------------------");
-		System.out.println("IP informado: " + primeiroOcteto + "." + segundoOcteto + "." + terceiroOcteto + "." + quartoOcteto + "/" + cidr);
+		System.out.println("IP informado: " + primeiroOcteto + "." + segundoOcteto + "." + terceiroOcteto + "."
+				+ quartoOcteto + "/" + cidr);
 		System.out.println("Primeiro octeto: " + primeiroOcteto);
 		System.out.println("Classe do IP: " + "Classe " + classe);
 		System.out.println("Máscara binária: " + mascaraBinaria);
 		System.out.println("Máscara decimal: " + mascaraDecimal);
 		System.out.println("IPs por sub-rede com /" + cidr + ": " + (int) ipsPorSubRede + " IPs disponíveis");
 		System.out.println("------------------------------------");
-		
+
 	}
-	
-	
+
 }

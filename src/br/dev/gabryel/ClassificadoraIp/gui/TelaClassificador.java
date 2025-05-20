@@ -5,10 +5,12 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import br.dev.gabryel.ClassificadoraIp.model.ClassificarIp;
@@ -27,6 +29,7 @@ public class TelaClassificador {
 	private JLabel labelIpClass;
 	private JLabel labelMascaraDecimal;
 	private JLabel labelMascaraBinaria;
+	private JTextArea jtextSugestoesSubredes;
 	private JLabel labelIpsDisponiveis;
 	private JLabel labelMensagemErro;
 
@@ -80,6 +83,15 @@ public class TelaClassificador {
 		textCidr = new JTextField();
 		textCidr.setBounds(350, 70, 70, 40);
 		
+		jtextSugestoesSubredes = new JTextArea();
+		jtextSugestoesSubredes.setBounds(20, 290, 380, 100);
+		jtextSugestoesSubredes.setEditable(false);
+		jtextSugestoesSubredes.setLineWrap(true); // Quebra automática
+		jtextSugestoesSubredes.setWrapStyleWord(true); // Quebra em palavras
+		jtextSugestoesSubredes.setFont(fonteResultado);
+
+		
+		
 		// Adicionando os Botoes
 		buttonClassificarIp = new JButton();
 		buttonClassificarIp.setText("Classificar");
@@ -98,7 +110,25 @@ public class TelaClassificador {
 					String quarto = textQuartoOcteto.getText();
 					int cidr = Integer.parseInt(textCidr.getText());
 
-					// Cria objeto e configura
+					//Converte tudo para INT
+					int primeiroInt = Integer.parseInt(primeiro);
+				    int segundoInt = Integer.parseInt(segundo);
+				    int terceiroInt = Integer.parseInt(terceiro);
+				    int quartoInt = Integer.parseInt(quarto);
+
+				    
+					// Validação dos octetos
+				    if (primeiroInt < 0 || primeiroInt > 255 ||
+				        segundoInt < 0 || segundoInt > 255 ||
+				        terceiroInt < 0 || terceiroInt > 255 ||
+				        quartoInt < 0 || quartoInt > 255) {
+				        throw new IllegalArgumentException("Cada octeto deve estar entre 0 e 255.");
+				    }
+
+				    if (cidr < 0 || cidr > 32) {
+				        throw new IllegalArgumentException("CIDR inválido. Deve estar entre 0 e 32.");
+				    }
+					//  Pega as informações do IP
 					ClassificarIp classificar = new ClassificarIp();
 					classificar.setPrimeiroOcteto(primeiro);
 					classificar.setSegundoOcteto(segundo);
@@ -106,13 +136,24 @@ public class TelaClassificador {
 					classificar.setQuartoOcteto(quarto);
 					classificar.setCidr(cidr);
 
-					// Gera dados
+					// Gera os dados do IP
 					String classe = classificar.getClasse();
 					String mascaraBinaria = classificar.gerarMascaraBinaria(cidr).toString();
 					String mascaraDecimal = classificar.gerarMascaraDecimal(new StringBuilder(mascaraBinaria));
 					int ips = (int) classificar.getIpPorSubRede();
+					
+					// Esse método retorna uma lista com sugestões de sub-redes baseadas no CIDR informado
+					List<String> sugestoes = classificar.calcularSubRedes();
+					StringBuilder builder = new StringBuilder("Sugestões de Sub-redes:\n");
+					for (String sugestao : sugestoes) {
+					    builder.append(sugestao).append("\n");
+					}
+					jtextSugestoesSubredes.setText(builder.toString());
+					jtextSugestoesSubredes.setVisible(true); // <-- Isso é essencial aqui
+					jtextSugestoesSubredes.repaint();
 
-					// Atualiza a tela
+
+					// Mostra as informações geradas
 					labelIpClass.setText("Classe do IP: " + classe);
 					labelMascaraBinaria.setText("Máscara Binária: " + mascaraBinaria);
 					labelMascaraDecimal.setText("Máscara Decimal: " + mascaraDecimal);
@@ -121,6 +162,7 @@ public class TelaClassificador {
 					labelIpClass.setVisible(true);
 					labelMascaraBinaria.setVisible(true);
 					labelMascaraDecimal.setVisible(true);
+					jtextSugestoesSubredes.setVisible(true);
 					labelIpsDisponiveis.setVisible(true);
 
 				} catch (Exception ex) {
@@ -128,6 +170,7 @@ public class TelaClassificador {
 					labelMascaraBinaria.setVisible(false);
 					labelMascaraDecimal.setVisible(false);
 					labelIpsDisponiveis.setVisible(false);
+					jtextSugestoesSubredes.setVisible(false);
 
 					labelMensagemErro.setBounds(50, 160, 370, 90);
 					labelMensagemErro.setText("<html><body style='width: 250px'>Erro ao processar. Verifique se todos os campos foram preenchidos corretamente com números válidos.");
@@ -204,6 +247,7 @@ public class TelaClassificador {
 		container.add(labelMascaraDecimal);
 		container.add(labelMascaraBinaria);
 		container.add(labelIpsDisponiveis);
+		container.add(jtextSugestoesSubredes);
 		container.add(labelMensagemErro);
 
 		tela.setVisible(true);
