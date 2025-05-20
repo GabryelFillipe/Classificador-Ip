@@ -29,7 +29,7 @@ public class TelaClassificador {
 	private JLabel labelIpClass;
 	private JLabel labelMascaraDecimal;
 	private JLabel labelMascaraBinaria;
-	private JTextArea jtextSugestoesSubredes;
+	private JLabel labelSubRede;
 	private JLabel labelIpsDisponiveis;
 	private JLabel labelMensagemErro;
 
@@ -83,12 +83,10 @@ public class TelaClassificador {
 		textCidr = new JTextField();
 		textCidr.setBounds(350, 70, 70, 40);
 		
-		jtextSugestoesSubredes = new JTextArea();
-		jtextSugestoesSubredes.setBounds(20, 290, 380, 100);
-		jtextSugestoesSubredes.setEditable(false);
-		jtextSugestoesSubredes.setLineWrap(true); // Quebra automática
-		jtextSugestoesSubredes.setWrapStyleWord(true); // Quebra em palavras
-		jtextSugestoesSubredes.setFont(fonteResultado);
+		labelSubRede = new JLabel();
+		labelSubRede.setBounds(20, 290, 380, 100);
+		labelSubRede.setFont(fonteResultado);
+		labelSubRede.setVisible(false);
 
 		
 		
@@ -140,17 +138,15 @@ public class TelaClassificador {
 					String classe = classificar.getClasse();
 					String mascaraBinaria = classificar.gerarMascaraBinaria(cidr).toString();
 					String mascaraDecimal = classificar.gerarMascaraDecimal(new StringBuilder(mascaraBinaria));
+					int subRede = classificar.getSubRedes();
+					String subRedeStr = Integer.toString(subRede);
 					int ips = (int) classificar.getIpPorSubRede();
 					
 					// Esse método retorna uma lista com sugestões de sub-redes baseadas no CIDR informado
-					List<String> sugestoes = classificar.calcularSubRedes();
-					StringBuilder builder = new StringBuilder("Sugestões de Sub-redes:\n");
-					for (String sugestao : sugestoes) {
-					    builder.append(sugestao).append("\n");
-					}
-					jtextSugestoesSubredes.setText(builder.toString());
-					jtextSugestoesSubredes.setVisible(true); // <-- Isso é essencial aqui
-					jtextSugestoesSubredes.repaint();
+					
+					labelSubRede.setText(subRedeStr);
+					labelSubRede.setVisible(true); // <-- Isso é essencial aqui
+					labelSubRede.repaint();
 
 
 					// Mostra as informações geradas
@@ -162,7 +158,7 @@ public class TelaClassificador {
 					labelIpClass.setVisible(true);
 					labelMascaraBinaria.setVisible(true);
 					labelMascaraDecimal.setVisible(true);
-					jtextSugestoesSubredes.setVisible(true);
+					labelSubRede.setVisible(true);
 					labelIpsDisponiveis.setVisible(true);
 
 				} catch (Exception ex) {
@@ -170,7 +166,7 @@ public class TelaClassificador {
 					labelMascaraBinaria.setVisible(false);
 					labelMascaraDecimal.setVisible(false);
 					labelIpsDisponiveis.setVisible(false);
-					jtextSugestoesSubredes.setVisible(false);
+					labelSubRede.setVisible(false);
 
 					labelMensagemErro.setBounds(50, 160, 370, 90);
 					labelMensagemErro.setText("<html><body style='width: 250px'>Erro ao processar. Verifique se todos os campos foram preenchidos corretamente com números válidos.");
@@ -203,6 +199,8 @@ public class TelaClassificador {
 				textSegundoOcteto.setText(null);
 				textTerceiroOcteto.setText(null);
 				textCidr.setText(null);
+				jtextQuantidadesSubredes.setText(null);
+				jtextQuantidadesSubredes.setVisible(false);
 				
 			}
 		});
@@ -247,7 +245,7 @@ public class TelaClassificador {
 		container.add(labelMascaraDecimal);
 		container.add(labelMascaraBinaria);
 		container.add(labelIpsDisponiveis);
-		container.add(jtextSugestoesSubredes);
+		container.add(jtextQuantidadesSubredes);
 		container.add(labelMensagemErro);
 
 		tela.setVisible(true);

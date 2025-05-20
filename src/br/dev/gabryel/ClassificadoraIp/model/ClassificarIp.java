@@ -146,19 +146,17 @@ public class ClassificarIp {
 		return decimal.toString();
 	}
 
-	public List<String> calcularSubRedes() {
-	    List<String> sugestoes = new ArrayList<>();
+	public int getSubRedes() {
+	  //String subredes = new String();
 
 	    if (cidr < 30) {
-	        for (int newCIDR = cidr + 1; newCIDR <= cidr + 4 && newCIDR <= 30; newCIDR++) {
-	            int subHosts = (int) Math.pow(2, 32 - newCIDR) - 2;
-	            sugestoes.add("CIDR /" + newCIDR + " -> " + subHosts + " IPs utilizáveis");
-	        }
+	        double subHosts = Math.pow(cidr, 2) ;
+	        int subRedes = (int) subHosts; 
 	    } else {
-	        sugestoes.add("Não é possível subdividir mais o IP com CIDR /" + cidr);
+	    	 throw new IllegalArgumentException("CIDR inválido. Deve estar entre 0 e 32.");
 	    }
 
-	    return sugestoes;
+	    return getSubRedes();
 	}
 
 
