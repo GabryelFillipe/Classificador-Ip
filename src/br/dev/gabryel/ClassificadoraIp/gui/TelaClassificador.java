@@ -84,7 +84,7 @@ public class TelaClassificador {
 		textCidr.setBounds(350, 70, 70, 40);
 		
 		labelSubRede = new JLabel();
-		labelSubRede.setBounds(20, 290, 380, 100);
+		labelSubRede.setBounds(20, 205, 380, 100);
 		labelSubRede.setFont(fonteResultado);
 		labelSubRede.setVisible(false);
 
@@ -139,13 +139,12 @@ public class TelaClassificador {
 					String mascaraBinaria = classificar.gerarMascaraBinaria(cidr).toString();
 					String mascaraDecimal = classificar.gerarMascaraDecimal(new StringBuilder(mascaraBinaria));
 					int subRede = classificar.getSubRedes();
-					String subRedeStr = Integer.toString(subRede);
+					//String subRedeStr = Double.toString(subRede);
 					int ips = (int) classificar.getIpPorSubRede();
 					
-					// Esse método retorna uma lista com sugestões de sub-redes baseadas no CIDR informado
 					
-					labelSubRede.setText(subRedeStr);
-					labelSubRede.setVisible(true); // <-- Isso é essencial aqui
+					labelSubRede.setText("Quantidade de IPs total: "+ subRede);
+					labelSubRede.setVisible(true);
 					labelSubRede.repaint();
 
 
@@ -199,8 +198,8 @@ public class TelaClassificador {
 				textSegundoOcteto.setText(null);
 				textTerceiroOcteto.setText(null);
 				textCidr.setText(null);
-				jtextQuantidadesSubredes.setText(null);
-				jtextQuantidadesSubredes.setVisible(false);
+				labelSubRede.setText(null);
+				labelSubRede.setVisible(false);
 				
 			}
 		});
@@ -222,7 +221,7 @@ public class TelaClassificador {
 		labelMascaraBinaria.setFont(fonteResultado);
 		
 		labelIpsDisponiveis = new JLabel();
-		labelIpsDisponiveis.setBounds(20, 230, 350, 50);
+		labelIpsDisponiveis.setBounds(20, 250, 350, 50);
 		labelIpsDisponiveis.setFont(fonteResultado);
 		
 		labelMensagemErro = new JLabel();
@@ -245,7 +244,7 @@ public class TelaClassificador {
 		container.add(labelMascaraDecimal);
 		container.add(labelMascaraBinaria);
 		container.add(labelIpsDisponiveis);
-		container.add(jtextQuantidadesSubredes);
+		container.add(labelSubRede);
 		container.add(labelMensagemErro);
 
 		tela.setVisible(true);

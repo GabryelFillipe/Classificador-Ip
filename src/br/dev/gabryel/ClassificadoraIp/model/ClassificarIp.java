@@ -15,6 +15,7 @@ public class ClassificarIp {
 	private String terceiroOcteto;
 	private String quartoOcteto;
 	private double ipsPorSubRede;
+	private int subRede;
 
 	public int getCidr() {
 		return cidr;
@@ -147,16 +148,15 @@ public class ClassificarIp {
 	}
 
 	public int getSubRedes() {
-	  //String subredes = new String();
 
 	    if (cidr < 30) {
-	        double subHosts = Math.pow(cidr, 2) ;
-	        int subRedes = (int) subHosts; 
-	    } else {
-	    	 throw new IllegalArgumentException("CIDR inválido. Deve estar entre 0 e 32.");
+	    	double bitEmprestado = 32 - cidr;
+	        double subRedes = Math.pow(2, bitEmprestado);
+	         //int subRede = (int) subRedes;
+//	        double subRedes = Math.pow(cidr, 2) ;
+        subRede = (int) subRedes;
 	    }
-
-	    return getSubRedes();
+	    return subRede;
 	}
 
 
