@@ -10,6 +10,7 @@ public class ClassificarIp {
 	private String terceiroOcteto;
 	private String quartoOcteto;
 	private int cidr;
+	private int subRede;
 
 	// Construtor (opcional, mas boa prática)
 	public ClassificarIp() {
@@ -287,5 +288,12 @@ public class ClassificarIp {
 			}
 		}
 		return resultadosSubRede;
+	}
+	public int getSubRede(){
+		int quantidadeBitsHostRestantes = 32 - this.cidr;
+		int bitsEmprestadosUltimoOcteto = 8 - quantidadeBitsHostRestantes;
+
+		int subRede = (int) Math.pow(2, bitsEmprestadosUltimoOcteto);
+		return subRede;
 	}
 }

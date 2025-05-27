@@ -35,13 +35,14 @@ public class TelaClassificador {
 	private JLabel labelMensagemErro;
 	private JTextArea textAreaDetalhesSubRedes;
 	private JScrollPane scrollPaneDetalhesSubRedes;
+	private JLabel labelSubRedes;
 
 	public void criarTelaClassificador() {
 
 		// Criando a minha tela.
 		JFrame tela = new JFrame();
 		tela.setTitle("Classificador de IP");
-		tela.setSize(450, 750); // Mantém o tamanho da tela para acomodar a JTextArea
+		tela.setSize(450, 650); // Mantém o tamanho da tela para acomodar a JTextArea
 		tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		tela.setResizable(false);
 		tela.setLayout(null);
@@ -91,6 +92,11 @@ public class TelaClassificador {
 		labelIpsTotal.setBounds(20, 205, 380, 100);
 		labelIpsTotal.setFont(fonteResultado);
 		labelIpsTotal.setVisible(false);
+		
+		labelSubRedes = new JLabel();
+		labelSubRedes.setBounds(20, 245, 380, 100);
+		labelSubRedes.setFont(fonteResultado);
+		labelSubRedes.setVisible(false);
 
         // JTextArea para exibir os detalhes das sub-redes personalizadas
         textAreaDetalhesSubRedes = new JTextArea();
@@ -99,7 +105,7 @@ public class TelaClassificador {
         textAreaDetalhesSubRedes.setLineWrap(true);
         textAreaDetalhesSubRedes.setWrapStyleWord(true);
         scrollPaneDetalhesSubRedes = new JScrollPane(textAreaDetalhesSubRedes);
-        scrollPaneDetalhesSubRedes.setBounds(20, 500, 400, 180); // Posição e tamanho para a área de texto
+        scrollPaneDetalhesSubRedes.setBounds(20, 350, 400, 180); // Posição e tamanho para a área de texto
         scrollPaneDetalhesSubRedes.setVisible(false); // Inicialmente invisível
 
 		// Adicionando os Botoes
@@ -128,7 +134,7 @@ public class TelaClassificador {
 					int quartoInt = Integer.parseInt(quarto);
 
 					// Validação dos octetos
-					if (primeiroInt < 0 || primeiroInt > 255 || segundoInt < 0 || segundoInt > 255 || terceiroInt < 0
+					if (primeiroInt <= 0 || primeiroInt > 255 || segundoInt < 0 || segundoInt > 255 || terceiroInt < 0
 							|| terceiroInt > 255 || quartoInt < 0 || quartoInt > 255) {
 						throw new IllegalArgumentException("Cada octeto deve estar entre 0 e 255.");
 					}
@@ -143,6 +149,7 @@ public class TelaClassificador {
 					classificar.setTerceiroOcteto(terceiro);
 					classificar.setQuartoOcteto(quarto);
 					classificar.setCidr(cidr);
+					
 
 					// Gera os dados do IP
 					String classe = classificar.getClasse();
@@ -151,6 +158,7 @@ public class TelaClassificador {
 					int ipsTotal = classificar.getIpsTotal();
 					DecimalFormat df = new DecimalFormat("#,###");
 					int ips = (int) classificar.getIpPorSubRede();
+					int subRedes = classificar.getSubRede();
 
 					labelIpsTotal.setText("Quantidade de IPs total: " + df.format(ipsTotal));
 					labelIpsTotal.setVisible(true);
@@ -161,12 +169,14 @@ public class TelaClassificador {
 					labelMascaraBinaria.setText("Máscara Binária: " + mascaraBinaria);
 					labelMascaraDecimal.setText("Máscara Decimal: " + mascaraDecimal);
 					labelIpsDisponiveis.setText("IPs disponíveis: " + df.format(ips));
+					labelSubRedes.setText("Quantidade de Sub-Rede: " + subRedes);
 
 					labelIpClass.setVisible(true);
 					labelMascaraBinaria.setVisible(true);
 					labelMascaraDecimal.setVisible(true);
 					labelIpsTotal.setVisible(true);
 					labelIpsDisponiveis.setVisible(true);
+					labelSubRedes.setVisible(true);
 
 					// Lógica para exibir os detalhes das sub-redes após a classificação
                     List<String> detalhes = classificar.gerarDetalhesSubRedes();
@@ -217,7 +227,8 @@ public class TelaClassificador {
 				textCidr.setText(null);
 				labelIpsTotal.setText(null);
 				labelIpsTotal.setVisible(false);
-				scrollPaneDetalhesSubRedes.setVisible(false); // Esconde a área de detalhes ao limpar
+				labelSubRedes.setVisible(false);
+				scrollPaneDetalhesSubRedes.setVisible(false);
 			}
 		});
 
@@ -258,7 +269,8 @@ public class TelaClassificador {
 		container.add(labelIpsDisponiveis);
 		container.add(labelIpsTotal);
 		container.add(labelMensagemErro);
-		container.add(scrollPaneDetalhesSubRedes); // Adiciona o JScrollPane (com a JTextArea dentro)
+		container.add(scrollPaneDetalhesSubRedes); 
+		container.add(labelSubRedes);
 
 		tela.setVisible(true);
 	}
