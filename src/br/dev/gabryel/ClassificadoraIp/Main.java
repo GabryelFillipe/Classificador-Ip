@@ -12,7 +12,7 @@ public class Main {
 		TelaClassificador tela = new TelaClassificador();
 		tela.criarTelaClassificador();
 
-		ClassificarIp ci = new ClassificarIp();
+		
 
 	}
 

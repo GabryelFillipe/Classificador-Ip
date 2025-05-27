@@ -2,181 +2,284 @@ package br.dev.gabryel.ClassificadoraIp.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.lang.Math;
 
 public class ClassificarIp {
-
-	private int cidr;
-	private String mascaraDecimal;
-	private String mascaraBinaria;
-	private String classe;
 	private String primeiroOcteto;
 	private String segundoOcteto;
 	private String terceiroOcteto;
 	private String quartoOcteto;
-	private double ipsPorSubRede;
-	private int subRede;
+	private int cidr;
 
-	public int getCidr() {
-		return cidr;
+	// Construtor (opcional, mas boa prática)
+	public ClassificarIp() {
+		// Construtor vazio
 	}
 
-	public void setCidr(int cidr) {
-		if (cidr < 0 || cidr > 32) {
-			throw new IllegalArgumentException("CIDR inválido: deve estar entre 0 e 32.");// Limita o CIDR a 32
-			// Thorw é usado para criar uma execução de erro
-		}
-		this.cidr = cidr;
-	}
-
-	public String getMascaraDecimal() {
-		return mascaraDecimal;
-	}
-
-	public void setMascaraDecimal(String mascaraDecimal) {
-		this.mascaraDecimal = mascaraDecimal;
-	}
-
-	public String getMascaraBinaria() {
-		return mascaraBinaria;
-	}
-
-	public void setMascaraBinaria(String mascaraBinaria) {
-		this.mascaraBinaria = mascaraBinaria;
-	}
-
-	public int getPrimeiroOcteto() {
-		int primeiroOctetoInt = Integer.parseInt(primeiroOcteto);
-
-		return primeiroOctetoInt;
+	// Métodos getters e setters
+	public String getPrimeiroOcteto() {
+		return primeiroOcteto;
 	}
 
 	public void setPrimeiroOcteto(String primeiroOcteto) {
 		this.primeiroOcteto = primeiroOcteto;
 	}
 
-	public String getClasse() {
-
-		int primeiroOctetoInt = getPrimeiroOcteto();
-		if (primeiroOctetoInt >= 1 && primeiroOctetoInt <= 126)
-			classe = "A";
-		else if (primeiroOctetoInt >= 128 && primeiroOctetoInt <= 191)
-			classe = "B";
-		else if (primeiroOctetoInt >= 192 && primeiroOctetoInt <= 223)
-			classe = "C";
-		else if (primeiroOctetoInt >= 224 && primeiroOctetoInt <= 239)
-			classe = "D";
-		else if (primeiroOctetoInt >= 240 && primeiroOctetoInt <= 255)
-			classe = "E";
-		else if (primeiroOctetoInt < 1 && primeiroOctetoInt > 255)
-			throw new IllegalArgumentException("O endereço IP não pode começar com um numero menor que 1.");// Define que o primeiro octeto não pode ser menor que 1
-																											
-		return classe;
-	}
-
-	public int getSegundoOcteto() {
-		int segundoOctetoInt = Integer.parseInt(segundoOcteto);
-		return segundoOctetoInt;
+	public String getSegundoOcteto() {
+		return segundoOcteto;
 	}
 
 	public void setSegundoOcteto(String segundoOcteto) {
 		this.segundoOcteto = segundoOcteto;
 	}
 
-	public int getTerceiroOcteto() {
-		int terceiroOctetoInt = Integer.parseInt(terceiroOcteto);
-		return terceiroOctetoInt;
+	public String getTerceiroOcteto() {
+		return terceiroOcteto;
 	}
 
 	public void setTerceiroOcteto(String terceiroOcteto) {
 		this.terceiroOcteto = terceiroOcteto;
 	}
 
-	public int getQuartoOcteto() {
-		int quartoOctetoInt = Integer.parseInt(quartoOcteto);
-		return quartoOctetoInt;
+	public String getQuartoOcteto() {
+		return quartoOcteto;
 	}
 
 	public void setQuartoOcteto(String quartoOcteto) {
 		this.quartoOcteto = quartoOcteto;
 	}
 
-	public double getIpPorSubRede() {
-		if (cidr > 32) {
-			System.out.println("O CIDR NÃO PODE SER MAIOR QUE 32");
-		} else if (cidr < 30) {
-			ipsPorSubRede = Math.pow(2, 32 - cidr) - 2;
-		} else {
-			ipsPorSubRede = Math.pow(2, 32 - cidr); // Para CIDR 30 ou mais, pode ajustar a lógica
-		}
+	public int getCidr() {
+		return cidr;
+	}
 
-		return ipsPorSubRede;
+	public void setCidr(int cidr) {
+		this.cidr = cidr;
+	}
+
+	// --- Métodos de Classificação de IP (Exemplo - Adicione seus métodos reais
+	// aqui) ---
+	public String getClasse() {
+		int primeiroOctetoInt = Integer.parseInt(primeiroOcteto);
+		if (primeiroOctetoInt >= 1 && primeiroOctetoInt <= 126)
+			return "A";
+		if (primeiroOctetoInt >= 128 && primeiroOctetoInt <= 191)
+			return "B";
+		if (primeiroOctetoInt >= 192 && primeiroOctetoInt <= 223)
+			return "C";
+		if (primeiroOctetoInt >= 224 && primeiroOctetoInt <= 239)
+			return "D (Multicast)";
+		if (primeiroOctetoInt >= 240 && primeiroOctetoInt <= 255)
+			return "E (Experimental)";
+		return "Desconhecida";
 	}
 
 	public StringBuilder gerarMascaraBinaria(int cidr) {
 		StringBuilder mascaraBinaria = new StringBuilder();
 		for (int i = 0; i < 32; i++) {
-			mascaraBinaria.append(i < cidr ? '1' : '0');
-//			  if (i < 8)
-//		            mascaraBinaria.append(".");
+			if (i < cidr) {
+				mascaraBinaria.append("1");
+			} else {
+				mascaraBinaria.append("0");
+			}
+			if ((i + 1) % 8 == 0 && i < 31) {
+				mascaraBinaria.append(".");
+			}
 		}
-		// ? serve como uma expressão condicional ternária para o if-else.
 		return mascaraBinaria;
-
 	}
 
-	public String gerarMascaraDecimal(StringBuilder binaria) {
-		// Cria um novo StringBuilder para armazenar o resultado decimal da máscara
-		StringBuilder decimal = new StringBuilder();
+	public String gerarMascaraDecimal(StringBuilder mascaraBinaria) {
+		String[] octetosBinarios = mascaraBinaria.toString().split("\\.");
+		StringBuilder mascaraDecimal = new StringBuilder();
+		for (String octetoBinario : octetosBinarios) {
+			mascaraDecimal.append(Integer.parseInt(octetoBinario, 2));
+			if (mascaraDecimal.length() < 12) { // Evita adicionar '.' no final
+				mascaraDecimal.append(".");
+			}
+		}
+		return mascaraDecimal.toString();
+	}
 
-		// Loop que percorre os 4 octetos (32 bits / 8 bits por octeto = 4)
-		for (int i = 0; i < 4; i++) {
-			// Extrai 8 bits (1 octeto) da string binária, com base na posição atual
-			String octeto = binaria.substring(i * 8, (i + 1) * 8);
+	public int getIpsTotal() {
+		return (int) Math.pow(2, (32 - this.cidr));
+	}
 
-			// Converte o octeto binário para decimal e adiciona ao resultado
-			decimal.append(Integer.parseInt(octeto, 2));
+	public double getIpPorSubRede() {
+		int bitsHost = 32 - this.cidr;
+		if (bitsHost <= 1) { // Para /31 e /32, não há IPs utilizáveis no sentido tradicional (rede e
+								// broadcast)
+			return Math.pow(2, bitsHost);
+		}
+		return Math.pow(2, bitsHost) - 2;
+	}
+	// --- Fim dos Métodos de Classificação de IP (Exemplo) ---
 
-			// Se não for o último octeto, adiciona um ponto como separador
-			if (i < 3)
-				decimal.append(".");
+	public List<String> gerarDetalhesSubRedes() {
+		List<String> resultadosSubRede = new ArrayList<>();
+
+		// Adaptação para CIDR <= 24
+		if (this.cidr <= 24) {
+			long totalIps = (long) Math.pow(2, (32 - this.cidr));
+			long ipsUtilizaveis = totalIps;
+			if (this.cidr <= 30) { // Para CIDR <= /30, normalmente subtraímos 2 (rede e broadcast)
+				ipsUtilizaveis = totalIps - 2;
+			}
+			if (this.cidr == 31 || this.cidr == 32) { // Casos específicos para /31 e /32
+				ipsUtilizaveis = totalIps;
+			}
+
+			// Calcular o endereço de rede
+			int[] ipOctetos = { Integer.parseInt(primeiroOcteto), Integer.parseInt(segundoOcteto),
+					Integer.parseInt(terceiroOcteto), Integer.parseInt(quartoOcteto) };
+
+			// Mascara para os octetos (ex: para /16, a máscara é 255.255.0.0)
+			int[] mascaraDecimal = new int[4];
+			StringBuilder mascaraBinariaCompleta = gerarMascaraBinaria(this.cidr);
+			String[] octetosMascaraBin = mascaraBinariaCompleta.toString().split("\\.");
+			for (int i = 0; i < 4; i++) {
+				mascaraDecimal[i] = Integer.parseInt(octetosMascaraBin[i], 2);
+			}
+
+			StringBuilder ipRedeBuilder = new StringBuilder();
+			for (int i = 0; i < 4; i++) {
+				ipRedeBuilder.append(ipOctetos[i] & mascaraDecimal[i]);
+				if (i < 3)
+					ipRedeBuilder.append(".");
+			}
+			String ipRede = ipRedeBuilder.toString();
+
+			// Calcular o endereço de broadcast
+			StringBuilder ipBroadcastBuilder = new StringBuilder();
+			for (int i = 0; i < 4; i++) {
+				ipBroadcastBuilder.append(ipOctetos[i] | (~mascaraDecimal[i] & 0xFF)); // Bitwise OR com o complemento
+																						// da máscara (0xFF para
+																						// garantir 8 bits)
+				if (i < 3)
+					ipBroadcastBuilder.append(".");
+			}
+			String ipBroadcast = ipBroadcastBuilder.toString();
+
+			// Calcular o primeiro e último host
+			String primeiroHost = "N/A";
+			String ultimoHost = "N/A";
+
+			if (ipsUtilizaveis > 0) {
+				// Para o primeiro host, basta adicionar 1 ao IP de rede no último octeto,
+				// se o IP de rede terminar em .0, e adaptar para outros octetos se necessário.
+				// Isso se torna complexo com muitos octetos, aqui uma simplificação.
+
+				// Exemplo simplificado para primeiro e último host (pode não ser totalmente
+				// preciso para CIDRs < /24 sem lógica avançada)
+				String[] redeParts = ipRede.split("\\.");
+				String[] broadcastParts = ipBroadcast.split("\\.");
+
+				// Primeiro Host
+				int lastOctetRede = Integer.parseInt(redeParts[3]);
+				if (this.cidr < 32) { // Se não for um host único
+					if (lastOctetRede < 255) { // Se o último octeto de rede não for 255
+						primeiroHost = redeParts[0] + "." + redeParts[1] + "." + redeParts[2] + "."
+								+ (lastOctetRede + 1);
+					} else { // Caso especial, precisaríamos avançar para o octeto anterior
+						// Logica mais complexa para quando o último octeto de rede é 255
+						primeiroHost = "Verificar"; // Indicar que é mais complexo
+					}
+				} else { // Para /32, o IP de rede é o próprio host
+					primeiroHost = ipRede;
+				}
+
+				// Último Host
+				int lastOctetBroadcast = Integer.parseInt(broadcastParts[3]);
+				if (this.cidr < 32) { // Se não for um host único
+					if (lastOctetBroadcast > 0) { // Se o último octeto de broadcast não for 0
+						ultimoHost = broadcastParts[0] + "." + broadcastParts[1] + "." + broadcastParts[2] + "."
+								+ (lastOctetBroadcast - 1);
+					} else { // Caso especial, precisaríamos voltar para o octeto anterior
+						// Logica mais complexa para quando o último octeto de broadcast é 0
+						ultimoHost = "Verificar"; // Indicar que é mais complexo
+					}
+				} else { // Para /32, o IP de broadcast é o próprio host
+					ultimoHost = ipBroadcast;
+				}
+			}
+
+			resultadosSubRede.add("--- Detalhes da Rede Principal ---");
+			resultadosSubRede.add(String.format("CIDR: /%d", this.cidr));
+			resultadosSubRede.add(String.format("Total de IPs na rede: %d", totalIps));
+			resultadosSubRede.add(String.format("IPs utilizáveis: %d", ipsUtilizaveis));
+			resultadosSubRede.add(String.format("IP da Rede: %s", ipRede));
+			resultadosSubRede.add(String.format("Primeiro Host: %s", primeiroHost));
+			resultadosSubRede.add(String.format("Último Host: %s", ultimoHost));
+			resultadosSubRede.add(String.format("IP de Broadcast: %s", ipBroadcast));
+
+			return resultadosSubRede;
 		}
 
-		// Converte o StringBuilder final em uma String e retorna a máscara no formato
-		// decimal
-		return decimal.toString();
+		// Lógica para CIDR > 24 (mantida do seu código original)
+		if (this.cidr > 24) {
+			int quantidadeBitsHostRestantes = 32 - this.cidr;
+			int bitsEmprestadosUltimoOcteto = 8 - quantidadeBitsHostRestantes;
+
+			int totalSubRedesGeradas = (int) Math.pow(2, bitsEmprestadosUltimoOcteto);
+			int ipsUtilizaveisNaSubRedeMenor;
+			if (this.cidr < 30) {
+				ipsUtilizaveisNaSubRedeMenor = ((int) Math.pow(2, quantidadeBitsHostRestantes)) - 2;
+			} else {
+				ipsUtilizaveisNaSubRedeMenor = (int) Math.pow(2, quantidadeBitsHostRestantes);
+			}
+
+			int[] valoresBinariosOcteto = { 128, 64, 32, 16, 8, 4, 2, 1 };
+			int incrementoOctetoFinal = 0;
+
+			for (int i = 0; i < bitsEmprestadosUltimoOcteto; i++) {
+				incrementoOctetoFinal += valoresBinariosOcteto[i];
+			}
+			incrementoOctetoFinal = 256 - incrementoOctetoFinal;
+
+			resultadosSubRede.add("--- Detalhes das Sub-redes geradas (base /24 para o último octeto) ---");
+			resultadosSubRede
+					.add("Há " + String.valueOf(totalSubRedesGeradas) + " sub-redes de tamanho /" + this.cidr + ".");
+			resultadosSubRede.add("Cada sub-rede tem " + ipsUtilizaveisNaSubRedeMenor + " IPs utilizáveis.");
+			resultadosSubRede.add(String.format("%-10s | %-15s | %-25s | %s", "Sub-rede", "IP da Rede",
+					"Intervalo de Hosts", "IP de Broadcast"));
+
+			int octetoInicialSubRede = 0;
+			String prefixoIpRede = primeiroOcteto + "." + segundoOcteto + "." + terceiroOcteto + ".";
+
+			for (int i = 1; i <= totalSubRedesGeradas; i++) {
+
+				String ipRede = prefixoIpRede + octetoInicialSubRede;
+
+				int primeiroHost = octetoInicialSubRede + 1;
+				int ultimoHost = octetoInicialSubRede + incrementoOctetoFinal - 2;
+
+				int ipBroadcast = octetoInicialSubRede + incrementoOctetoFinal - 1;
+
+				String hostsFormatado;
+				if (this.cidr == 31) {
+					hostsFormatado = prefixoIpRede + octetoInicialSubRede + " - " + prefixoIpRede
+							+ (octetoInicialSubRede + 1);
+				} else if (this.cidr == 32) {
+					hostsFormatado = prefixoIpRede + octetoInicialSubRede + " - " + prefixoIpRede
+							+ octetoInicialSubRede;
+				} else if (ipsUtilizaveisNaSubRedeMenor == 0) {
+					hostsFormatado = "Nenhum";
+				} else {
+					hostsFormatado = prefixoIpRede + primeiroHost + " - " + prefixoIpRede + ultimoHost;
+				}
+
+				if (this.cidr == 31) {
+					ipBroadcast = octetoInicialSubRede + 1;
+				} else if (this.cidr == 32) {
+					ipBroadcast = octetoInicialSubRede;
+				}
+
+				resultadosSubRede.add(String.format("%-10d | %-15s | %-25s | %s", i, ipRede, hostsFormatado,
+						prefixoIpRede + ipBroadcast));
+
+				octetoInicialSubRede += incrementoOctetoFinal;
+			}
+		}
+		return resultadosSubRede;
 	}
-
-	public int getSubRedes() {
-
-	    if (cidr < 30) {
-	    	double bitEmprestado = 32 - cidr;
-	        double subRedes = Math.pow(2, bitEmprestado);
-	         //int subRede = (int) subRedes;
-//	        double subRedes = Math.pow(cidr, 2) ;
-        subRede = (int) subRedes;
-	    }
-	    return subRede;
-	}
-
-
-	public void mostrarDados() {
-
-		mascaraBinaria = gerarMascaraBinaria(cidr).toString();
-		mascaraDecimal = gerarMascaraDecimal(new StringBuilder(mascaraBinaria));
-		classe = getClasse();
-		double ipsDisponiveis = getIpPorSubRede(); // força o cálculo dos IPs por sub rede
-
-		System.out.println("------------------------------------");
-		System.out.println("IP informado: " + primeiroOcteto + "." + segundoOcteto + "." + terceiroOcteto + "."
-				+ quartoOcteto + "/" + cidr);
-		System.out.println("Primeiro octeto: " + primeiroOcteto);
-		System.out.println("Classe do IP: " + "Classe " + classe);
-		System.out.println("Máscara binária: " + mascaraBinaria);
-		System.out.println("Máscara decimal: " + mascaraDecimal);
-		System.out.println("IPs por sub-rede com /" + cidr + ": " + (int) ipsPorSubRede + " IPs disponíveis");
-		System.out.println("------------------------------------");
-
-	}
-
 }
