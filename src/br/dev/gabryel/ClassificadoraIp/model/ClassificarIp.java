@@ -215,7 +215,7 @@ public class ClassificarIp {
 			return resultadosSubRede;
 		}
 
-		// Lógica para CIDR > 24 (mantida do seu código original)
+		// Lógica para CIDR > 24
 		if (this.cidr > 24) {
 			int quantidadeBitsHostRestantes = 32 - this.cidr;
 			int bitsEmprestadosUltimoOcteto = 8 - quantidadeBitsHostRestantes;
@@ -237,11 +237,9 @@ public class ClassificarIp {
 			incrementoOctetoFinal = 256 - incrementoOctetoFinal;
 
 			resultadosSubRede.add("--- Detalhes das Sub-redes geradas (base /24 para o último octeto) ---");
-			resultadosSubRede
-					.add("Há " + String.valueOf(totalSubRedesGeradas) + " sub-redes de tamanho /" + this.cidr + ".");
+			resultadosSubRede.add("Há " + String.valueOf(totalSubRedesGeradas) + " sub-redes de tamanho /" + this.cidr + ".");
 			resultadosSubRede.add("Cada sub-rede tem " + ipsUtilizaveisNaSubRedeMenor + " IPs utilizáveis.");
-			resultadosSubRede.add(String.format("%-10s | %-15s | %-25s | %s", "Sub-rede", "IP da Rede",
-					"Intervalo de Hosts", "IP de Broadcast"));
+			//resultadosSubRede.add(String.format("%-10s | %-15s | %-25s | %s", "Sub-rede", "IP da Rede","Intervalo de Hosts", "IP de Broadcast"));
 
 			int octetoInicialSubRede = 0;
 			String prefixoIpRede = primeiroOcteto + "." + segundoOcteto + "." + terceiroOcteto + ".";
@@ -274,8 +272,16 @@ public class ClassificarIp {
 					ipBroadcast = octetoInicialSubRede;
 				}
 
-				resultadosSubRede.add(String.format("%-10d | %-15s | %-25s | %s", i, ipRede, hostsFormatado,
-						prefixoIpRede + ipBroadcast));
+				 resultadosSubRede.add(String.format(
+		                    "Sub-rede = %d,\n" +
+		                    "IP de rede = %s,\n" +
+		                    "Intervalo de hosts = %s,\n" +
+		                    "IP de broadcast = %s\n" +
+		                    "--------------------------------------------------------------------------------------------", 
+		                    i, 
+		                    ipRede, 
+		                    hostsFormatado, 
+		                    prefixoIpRede + ipBroadcast));
 
 				octetoInicialSubRede += incrementoOctetoFinal;
 			}
