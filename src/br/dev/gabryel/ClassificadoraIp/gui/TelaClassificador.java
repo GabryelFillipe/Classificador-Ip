@@ -133,7 +133,7 @@ public class TelaClassificador {
 						throw new IllegalArgumentException("Cada octeto deve estar entre 0 e 255.");
 					}
 
-					if (cidr < 0 || cidr > 32) {
+					if (cidr <= 0 || cidr > 32) {
 						throw new IllegalArgumentException("CIDR inválido. Deve estar entre 0 e 32.");
 					}
 					// Pega as informações do IP
