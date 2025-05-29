@@ -196,8 +196,7 @@ public class TelaClassificador {
 					scrollPaneDetalhesSubRedes.setVisible(false); // Esconde a área de detalhes em caso de erro
 
 					labelMensagemErro.setBounds(50, 160, 370, 90);
-					labelMensagemErro.setText(
-							"<html><body style='width: 250px'>Erro ao processar. Verifique se todos os campos foram preenchidos corretamente com números válidos.");
+					labelMensagemErro.setText("<html><body style='width: 250px'>Erro ao processar. Verifique se todos os campos foram preenchidos corretamente com números válidos.");
 					labelMensagemErro.setVisible(true);
 					textCidr.setText(null);
 					textPrimeiroOcteto.setText(null);

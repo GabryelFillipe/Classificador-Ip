@@ -12,12 +12,12 @@ public class ClassificarIp {
 	private int cidr;
 	private int subRede;
 
-	// Construtor (opcional, mas boa prática)
+	
 	public ClassificarIp() {
 		// Construtor vazio
 	}
 
-	// Métodos getters e setters
+
 	public String getPrimeiroOcteto() {
 		return primeiroOcteto;
 	}
@@ -58,8 +58,7 @@ public class ClassificarIp {
 		this.cidr = cidr;
 	}
 
-	// --- Métodos de Classificação de IP (Exemplo - Adicione seus métodos reais
-	// aqui) ---
+
 	public String getClasse() {
 		int primeiroOctetoInt = Integer.parseInt(primeiroOcteto);
 		if (primeiroOctetoInt >= 1 && primeiroOctetoInt <= 126)
@@ -108,13 +107,12 @@ public class ClassificarIp {
 
 	public double getIpPorSubRede() {
 		int bitsHost = 32 - this.cidr;
-		if (bitsHost <= 1) { // Para /31 e /32, não há IPs utilizáveis no sentido tradicional (rede e
-								// broadcast)
+		if (bitsHost <= 1) { // Para /31 e /32, não há IPs utilizáveis no sentido tradicional (rede e broadcast)
 			return Math.pow(2, bitsHost);
 		}
 		return Math.pow(2, bitsHost) - 2;
 	}
-	// --- Fim dos Métodos de Classificação de IP (Exemplo) ---
+
 
 	public List<String> gerarDetalhesSubRedes() {
 		List<String> resultadosSubRede = new ArrayList<>();
@@ -168,10 +166,8 @@ public class ClassificarIp {
 			if (ipsUtilizaveis > 0) {
 				// Para o primeiro host, basta adicionar 1 ao IP de rede no último octeto,
 				// se o IP de rede terminar em .0, e adaptar para outros octetos se necessário.
-				// Isso se torna complexo com muitos octetos, aqui uma simplificação.
+			
 
-				// Exemplo simplificado para primeiro e último host (pode não ser totalmente
-				// preciso para CIDRs < /24 sem lógica avançada)
 				String[] redeParts = ipRede.split("\\.");
 				String[] broadcastParts = ipBroadcast.split("\\.");
 
@@ -181,8 +177,8 @@ public class ClassificarIp {
 					if (lastOctetRede < 255) { // Se o último octeto de rede não for 255
 						primeiroHost = redeParts[0] + "." + redeParts[1] + "." + redeParts[2] + "."
 								+ (lastOctetRede + 1);
-					} else { // Caso especial, precisaríamos avançar para o octeto anterior
-						// Logica mais complexa para quando o último octeto de rede é 255
+					} else {
+					
 						primeiroHost = "Verificar"; // Indicar que é mais complexo
 					}
 				} else { // Para /32, o IP de rede é o próprio host
@@ -195,8 +191,7 @@ public class ClassificarIp {
 					if (lastOctetBroadcast > 0) { // Se o último octeto de broadcast não for 0
 						ultimoHost = broadcastParts[0] + "." + broadcastParts[1] + "." + broadcastParts[2] + "."
 								+ (lastOctetBroadcast - 1);
-					} else { // Caso especial, precisaríamos voltar para o octeto anterior
-						// Logica mais complexa para quando o último octeto de broadcast é 0
+					} else { 
 						ultimoHost = "Verificar"; // Indicar que é mais complexo
 					}
 				} else { // Para /32, o IP de broadcast é o próprio host
