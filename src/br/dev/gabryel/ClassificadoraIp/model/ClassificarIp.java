@@ -14,7 +14,7 @@ public class ClassificarIp {
 
 	
 	public ClassificarIp() {
-		// Construtor vazio
+		
 	}
 
 
@@ -151,9 +151,7 @@ public class ClassificarIp {
 			// Calcular o endereço de broadcast
 			StringBuilder ipBroadcastBuilder = new StringBuilder();
 			for (int i = 0; i < 4; i++) {
-				ipBroadcastBuilder.append(ipOctetos[i] | (~mascaraDecimal[i] & 0xFF)); // Bitwise OR com o complemento
-																						// da máscara (0xFF para
-																						// garantir 8 bits)
+				ipBroadcastBuilder.append(ipOctetos[i] | (~mascaraDecimal[i] & 0xFF)); 
 				if (i < 3)
 					ipBroadcastBuilder.append(".");
 			}
@@ -186,11 +184,11 @@ public class ClassificarIp {
 				}
 
 				// Último Host
-				int lastOctetBroadcast = Integer.parseInt(broadcastParts[3]);
+				int ultimoOctetoBroadcast = Integer.parseInt(broadcastParts[3]);
 				if (this.cidr < 32) { // Se não for um host único
-					if (lastOctetBroadcast > 0) { // Se o último octeto de broadcast não for 0
+					if (ultimoOctetoBroadcast > 0) { // Se o último octeto de broadcast não for 0
 						ultimoHost = broadcastParts[0] + "." + broadcastParts[1] + "." + broadcastParts[2] + "."
-								+ (lastOctetBroadcast - 1);
+								+ (ultimoOctetoBroadcast - 1);
 					} else { 
 						ultimoHost = "Verificar"; // Indicar que é mais complexo
 					}
@@ -235,7 +233,7 @@ public class ClassificarIp {
 			resultadosSubRede.add("--- Detalhes das Sub-redes geradas (base /24 para o último octeto) ---");
 			resultadosSubRede.add("Há " + String.valueOf(totalSubRedesGeradas) + " sub-redes de tamanho /" + this.cidr + ".");
 			resultadosSubRede.add("Cada sub-rede tem " + ipsUtilizaveisNaSubRedeMenor + " IPs utilizáveis.");
-			//resultadosSubRede.add(String.format("%-10s | %-15s | %-25s | %s", "Sub-rede", "IP da Rede","Intervalo de Hosts", "IP de Broadcast"));
+		
 
 			int octetoInicialSubRede = 0;
 			String prefixoIpRede = primeiroOcteto + "." + segundoOcteto + "." + terceiroOcteto + ".";
