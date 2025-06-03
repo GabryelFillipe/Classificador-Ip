@@ -142,6 +142,24 @@ public class TelaClassificador {
 					if (cidr <= 0 || cidr > 32) {
 						throw new IllegalArgumentException("CIDR inválido. Deve estar entre 0 e 32.");
 					}
+					
+					// Validação para zeros à esquerda nos octetos (embutida)
+					if (primeiro != null && primeiro.length() > 1 && primeiro.startsWith("0")) {
+						throw new IllegalArgumentException("Primeiro octeto tem formato inválido (ex: '01', '007'). Use '0' ou números sem zero à esquerda.");
+					}
+					if (segundo != null && segundo.length() > 1 && segundo.startsWith("0")) {
+						throw new IllegalArgumentException("Segundo octeto tem formato inválido (ex: '01', '007'). Use '0' ou números sem zero à esquerda.");
+					}
+					if (terceiro != null && terceiro.length() > 1 && terceiro.startsWith("0")) {
+						throw new IllegalArgumentException("Terceiro octeto tem formato inválido (ex: '01', '007'). Use '0' ou números sem zero à esquerda.");
+					}
+					if (quarto != null && quarto.length() > 1 && quarto.startsWith("0")) {
+						throw new IllegalArgumentException("Quarto octeto tem formato inválido (ex: '01', '007'). Use '0' ou números sem zero à esquerda.");
+					}
+                    // Validação para zero à esquerda no CIDR (embutida)
+                    // Permite "0", mas não "00", "01", etc.
+                   
+					
 					// Pega as informações do IP
 					ClassificarIp classificar = new ClassificarIp();
 					classificar.setPrimeiroOcteto(primeiro);
@@ -192,6 +210,7 @@ public class TelaClassificador {
 					labelMascaraBinaria.setVisible(false);
 					labelMascaraDecimal.setVisible(false);
 					labelIpsDisponiveis.setVisible(false);
+					labelSubRedes.setVisible(false);
 					labelIpsTotal.setVisible(false);
 					scrollPaneDetalhesSubRedes.setVisible(false); // Esconde a área de detalhes em caso de erro
 

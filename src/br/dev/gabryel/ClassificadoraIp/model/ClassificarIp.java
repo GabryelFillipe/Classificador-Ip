@@ -11,6 +11,7 @@ public class ClassificarIp {
 	private String quartoOcteto;
 	private int cidr;
 	private int subRede;
+	
 
 	
 	public ClassificarIp() {
@@ -90,10 +91,13 @@ public class ClassificarIp {
 	}
 
 	public String gerarMascaraDecimal(StringBuilder mascaraBinaria) {
+		
 		String[] octetosBinarios = mascaraBinaria.toString().split("\\.");
 		StringBuilder mascaraDecimal = new StringBuilder();
+		
 		for (String octetoBinario : octetosBinarios) {
 			mascaraDecimal.append(Integer.parseInt(octetoBinario, 2));
+			
 			if (mascaraDecimal.length() < 12) { // Evita adicionar '.' no final
 				mascaraDecimal.append(".");
 			}
@@ -134,13 +138,16 @@ public class ClassificarIp {
 
 			// Mascara para os octetos (ex: para /16, a máscara é 255.255.0.0)
 			int[] mascaraDecimal = new int[4];
+			
 			StringBuilder mascaraBinariaCompleta = gerarMascaraBinaria(this.cidr);
 			String[] octetosMascaraBin = mascaraBinariaCompleta.toString().split("\\.");
+			
 			for (int i = 0; i < 4; i++) {
 				mascaraDecimal[i] = Integer.parseInt(octetosMascaraBin[i], 2);
 			}
 
 			StringBuilder ipRedeBuilder = new StringBuilder();
+			
 			for (int i = 0; i < 4; i++) {
 				ipRedeBuilder.append(ipOctetos[i] & mascaraDecimal[i]);
 				if (i < 3)
